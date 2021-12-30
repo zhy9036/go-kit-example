@@ -2,6 +2,7 @@ package svc
 
 import "context"
 
+// https://github.com/go-kit/examples/blob/master/addsvc/pkg/addservice/middleware.go
 type AddService interface {
 	Add(ctx context.Context, a, b int) (int, error)
 }
