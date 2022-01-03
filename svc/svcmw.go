@@ -23,7 +23,7 @@ type loggingMiddleware struct {
 	next   AddService
 }
 
-func (mw loggingMiddleware) Add(ctx context.Context, a, b int) (rst int, err error) {
+func (mw loggingMiddleware) Add(ctx context.Context, a, b int32) (rst int32, err error) {
 	defer func() {
 		mw.logger.Log("method", "Add", "a", a, "b", b, "rst", rst, "err", err)
 	}()
@@ -44,7 +44,7 @@ type metricsMiddleware struct {
 	next AddService
 }
 
-func (mw metricsMiddleware) Add(ctx context.Context, a, b int) (int, error) {
+func (mw metricsMiddleware) Add(ctx context.Context, a, b int32) (int32, error) {
 	v, e := mw.next.Add(ctx, a, b)
 	mw.ints.Add(float64(v))
 	return v, e
