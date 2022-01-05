@@ -38,12 +38,16 @@ func NewGRPCServer(endpoints endpoint.Set, logger log.Logger, otTracer stdopentr
 }
 
 func (s *grpcServer) Add(ctx context.Context, req *pb.AddRequest) (*pb.AddResponse, error) {
-	return nil, nil
+	_, res, err := s.add.ServeGRPC(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.AddResponse), nil
 }
 
 func decodeGRPCAddRequest(_ context.Context, req interface{}) (interface{}, error) {
-	request := req.(pb.AddRequest)
-	return &endpoint.AddRequest{A: request.A, B: request.B}, nil
+	request := req.(*pb.AddRequest)
+	return endpoint.AddRequest{A: request.A, B: request.B}, nil
 }
 
 func encodeGRPCAddRequest(_ context.Context, req interface{}) (interface{}, error) {
@@ -52,13 +56,13 @@ func encodeGRPCAddRequest(_ context.Context, req interface{}) (interface{}, erro
 }
 
 func decodeGRPCAddResponse(_ context.Context, res interface{}) (interface{}, error) {
-	response := res.(pb.AddResponse)
-	return &endpoint.AddResponse{V: response.V, Err: str2err(response.Err)}, nil
+	response := res.(*pb.AddResponse)
+	return endpoint.AddResponse{V: response.V, Err: str2err(response.Err)}, nil
 }
 
 func encodeGRPCAddResponse(_ context.Context, res interface{}) (interface{}, error) {
 	response := res.(endpoint.AddResponse)
-	return &pb.AddResponse{V: response.V, Err: response.Err.Error()}, nil
+	return &pb.AddResponse{V: response.V, Err: err2str(response.Err)}, nil
 }
 
 func str2err(s string) error {
@@ -66,4 +70,11 @@ func str2err(s string) error {
 		return nil
 	}
 	return errors.New(s)
+}
+
+func err2str(err error) string {
+	if err == nil {
+		return ""
+	}
+	return err.Error()
 }

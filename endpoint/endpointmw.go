@@ -26,7 +26,7 @@ func MetricsMiddleware(duration metrics.Histogram) endpoint.Middleware {
 	return func(e endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 			defer func(begin time.Time) {
-				duration.With("Success", fmt.Sprint(err == nil)).Observe(time.Since(begin).Seconds())
+				duration.With("success", fmt.Sprint(err == nil), "method", "Add").Observe(time.Since(begin).Seconds())
 			}(time.Now())
 			return e(ctx, request)
 		}

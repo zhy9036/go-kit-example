@@ -64,6 +64,6 @@ func MakeSumEndpoint(svc svc.AddService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		r := request.(AddRequest)
 		v, err := svc.Add(ctx, r.A, r.B)
-		return &AddResponse{V: v, Err: err}, err
+		return AddResponse{V: v, Err: err}, err
 	}
 }
