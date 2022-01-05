@@ -33,7 +33,7 @@ func main() {
 		debugAddr = fs.String("debug.addr", ":8080", "Debug and metrics listen address")
 		// httpAddr  = fs.String("http-addr", ":8081", "HTTP listen address")
 		grpcAddr  = fs.String("grpc-addr", ":8082", "gRPC listen address")
-		zipkinURL = fs.String("zipkin-url", "", "Enable Zipkin tracing via HTTP reporter URL e.g. http://localhost:9411/api/v2/spans")
+		zipkinURL = fs.String("zipkin-url", "http://localhost:9411/api/v2/spans", "Enable Zipkin tracing via HTTP reporter URL e.g. http://localhost:9411/api/v2/spans")
 		// zipkinBridge   = fs.Bool("zipkin-ot-bridge", false, "Use Zipkin OpenTracing bridge instead of native implementation")
 		// lightstepToken = fs.String("lightstep-token", "", "Enable LightStep tracing via a LightStep access token")
 		// appdashAddr    = fs.String("appdash-addr", "", "Enable Appdash tracing via an Appdash server host:port")
@@ -56,7 +56,7 @@ func main() {
 		if *zipkinURL != "" {
 			var (
 				err      error
-				hostPort = "localhost:2222"
+				hostPort = "localhost:8082"
 				svcName  = "addsvc"
 				reporter = zipkinhttp.NewReporter(*zipkinURL)
 			)
